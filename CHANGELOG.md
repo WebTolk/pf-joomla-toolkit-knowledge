@@ -3,6 +3,8 @@
 ## 1.0.1 - 2026-10-29
 
 - Publish Joomla Toolkit as an independent knowledge package using the standard ProcessForge package structure.
+- Translate reference documents and package metadata into English for an international audience.
+- Provide English and Russian repository READMEs, excluded from the downloadable package; store the knowledge introduction as `resources/overview.md`.
 - Preserve package ID `joomla.toolkit.documentation`, resource ID `joomla-toolkit` and all four source documents.
 - Store the articles directly in `resources/`; replace five original private path references with portable references.
 - Derive the package manifest from native `knowledge-package-create` and generate the resource index with native PF tooling.

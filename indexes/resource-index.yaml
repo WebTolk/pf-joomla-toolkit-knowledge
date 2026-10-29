@@ -3,7 +3,7 @@ package:
   id: joomla.toolkit.documentation
   version: 1.0.1
   package_root: global
-generated_at: '2026-10-29T12:16:45Z'
+generated_at: '2026-10-29T12:37:28Z'
 load_policy:
   default: on_demand
   heavy_resources: index_only_until_requested
@@ -13,7 +13,7 @@ resources:
     id: joomla-toolkit
     kind: reference
     title: Joomla toolkit
-    description: Правила, паттерны расширений, lifecycle, packaging, ACL и migration references для Joomla.
+    description: Joomla architecture rules, extension patterns, lifecycle, packaging, ACL, and migration references.
     path_ref:
       package: joomla.toolkit.documentation
       relative_path: resources

@@ -1,5 +1,5 @@
-# Происхождение и условия использования
+# Provenance and licensing
 
-Joomla Toolkit сопровождается WebTolk. Пакет перенесён из существующего пакета знаний ProcessForge `joomla.toolkit.documentation` версии `1.0.0`. Два исходных документа сохранены побайтно; в двух других заменены пять ссылок на локальные каталоги. Содержимое статей при упрощении репозитория не менялось.
+Joomla Toolkit is maintained by WebTolk. It originated from the existing ProcessForge knowledge package `joomla.toolkit.documentation` version `1.0.0`. The package's documentation has been translated into English for an international audience. Technical identifiers, version-pinned source references, code examples, and diagrams are preserved. The original source material remains available in private maintenance records.
 
-Исходный пакет не содержит отдельной лицензии. Эта публикация не назначает новую лицензию и не заменяет действующие условия сторонних материалов и примеров.
+The original package does not declare a separate license. This publication and translation do not assign a new license or replace the terms applicable to third-party material and examples.

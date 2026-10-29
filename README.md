@@ -1,33 +1,36 @@
 # Joomla Toolkit
 
-Подключаемый и обновляемый пакет знаний для [Process Forge](https://github.com/WebTolk/process-forge): архитектурные правила Joomla, структура расширений и REST API Joomla 6.
+**English** | [Russian](README.ru.md)
 
-## Статьи
+A connectable, updatable knowledge package for [Process Forge](https://github.com/WebTolk/process-forge), covering Joomla architecture, extension structures, and the Joomla 6 REST API. All documents and package metadata are in English.
 
-- [Назначение Toolkit](resources/README.md).
-- [Архитектурные правила](resources/joomla-architecture-rules.md).
-- [Структура расширений](resources/joomla-extension-structures.md).
-- [REST API Joomla 6](resources/joomla6-rest-api-core-full.md).
+## Reference material
 
-## Подключение и обновления
+- [Toolkit overview](resources/overview.md).
+- [Architecture rules](resources/joomla-architecture-rules.md).
+- [Extension structures](resources/joomla-extension-structures.md).
+- [Joomla 6 REST API](resources/joomla6-rest-api-core-full.md).
 
-Скачайте установочный ZIP из [GitHub Releases](https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases), распакуйте его в каталог пакетов вашего workplace и зарегистрируйте [package.yaml](package.yaml) в PF. Затем выберите пакет в контексте проекта.
+## Installation and updates
 
-- ID пакета: `joomla.toolkit.documentation`.
-- ID ресурса: `joomla-toolkit`.
-- [Стабильный манифест обновлений](https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/joomla-toolkit.json).
+Download the package ZIP from [GitHub Releases](https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases), unpack it into your workplace's package directory, register [package.yaml](package.yaml) with PF, and select the package in your project context.
 
-URL сервера уже включён в `update_sites` манифеста пакета. Штатный апдейтер PF получает новые версии из GitHub Releases, проверяет SHA-256 и устанавливает обновление по явной команде оператора. Для исходной установки `1.0.0`, в которой ещё нет сервера обновлений, однократно скопируйте блок `update_sites` из этого манифеста в её установленный `package.yaml`, сохранив остальные поля.
+- Package ID: `joomla.toolkit.documentation`.
+- Resource ID: `joomla-toolkit`.
+- [Stable update manifest](https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/joomla-toolkit.json).
 
-## Структура пакета
+The update server URL is included in the package's `update_sites`. The native PF updater discovers releases on GitHub, verifies SHA-256, and installs an update only after an explicit operator command. For the original `1.0.0` installation without an update site, copy the `update_sites` block into its installed `package.yaml` once, preserving all other fields.
+
+## Package structure
 
 ```text
 package.yaml
-README.md
-resources/                 # статьи
+resources/                 # English reference documents
 indexes/resource-index.yaml
+CHANGELOG.md
+NOTICE.md
 ```
 
-Используется типовая структура пакета знаний PF. Дополнительные каталоги добавляются по мере необходимости. [package.yaml](package.yaml) и [индекс ресурса](indexes/resource-index.yaml) нужны для подключения к PF. Служебные инструменты сопровождения хранятся локально вне публикации.
+The package follows the standard PF knowledge-package structure. The English and Russian repository README files are not included in the downloadable ZIP. Maintenance tools and private PF state are also excluded.
 
-[История изменений](CHANGELOG.md) · [Происхождение и условия использования](NOTICE.md).
+[Changelog](CHANGELOG.md) · [Provenance and licensing](NOTICE.md).

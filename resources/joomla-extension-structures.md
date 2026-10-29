@@ -1,8 +1,8 @@
-﻿# Joomla extension structures
+# Joomla extension structures
 
-- Этот файл содержит образцы файловой структуры расширений для Joomla 5+. 
-- Также в качестве дополнительной информации можно использовать книгу `Joomla extensions development` в `joomla.development.articles / dionysopoulos-book`. Она о Joomla 4 и частично информация в ней может устареть. Но так же многое может быть полезно до сих пор или служить отправной точкой для поиска.
-- Также в качестве дополнительной информации можно использовать статьи в `joomla.development.articles`
+- This file provides example directory layouts for Joomla 5+ extensions.
+- The `Joomla extensions development` book in `joomla.development.articles / dionysopoulos-book` provides additional background. It covers Joomla 4, so some information may be outdated; other parts can still be useful or provide a starting point for further research.
+- Additional articles are available in `joomla.development.articles`.
 
 ## Joomla 5+ Template Structure
 

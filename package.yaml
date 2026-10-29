@@ -14,8 +14,8 @@ resources:
 - id: joomla-toolkit
   kind: reference
   title: Joomla toolkit
-  description: Правила, паттерны расширений, lifecycle, packaging, ACL и migration
-    references для Joomla.
+  description: Joomla architecture rules, extension patterns, lifecycle, packaging,
+    ACL, and migration references.
   path_ref:
     package: joomla.toolkit.documentation
     relative_path: resources
