@@ -1,25 +1,38 @@
-# Joomla Toolkit for ProcessForge
+# Joomla Toolkit — пакет знаний для Process Forge
 
-Version **1.0.1** · Package `joomla.toolkit.documentation` · Resource `joomla-toolkit`
+**Joomla Toolkit** — подключаемый и обновляемый пакет знаний для [Process Forge (PF)](https://github.com/WebTolk/process-forge). Он содержит архитектурные правила Joomla, образцы структуры расширений и справочник REST API Joomla 6.
 
-A portable knowledge package with Joomla architecture rules, extension structures and Joomla 6 REST API notes. This first release preserves the existing toolkit; substantive updates will follow in separate releases. The copied documentation includes historical development-flow references from its original baseline.
+Пакет подключается к рабочему месту PF, выбирается в контексте проекта и используется агентом при разработке. Новые версии распространяются через GitHub Releases и обнаруживаются штатным апдейтером Process Forge. Обновление устанавливается по явной команде оператора с проверкой SHA-256.
 
-## Download and updates
+- **Основной репозиторий PF:** [WebTolk/process-forge](https://github.com/WebTolk/process-forge).
+- **Скачать пакет:** [GitHub Releases](https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases).
+- **Версия:** `1.0.1`.
+- **ID пакета:** `joomla.toolkit.documentation`.
+- **ID ресурса:** `joomla-toolkit`.
 
-Download `joomla.toolkit.documentation-1.0.1.zip` from [GitHub Releases](https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases). Use the package ZIP asset for PF installation; GitHub source-code archives contain repository tooling and are not installation assets.
+## Состав
 
-The stable update server is hosted entirely in GitHub Releases:
+- [Назначение исходного Toolkit](resources/joomla-toolkit/README.md).
+- [Архитектурные правила Joomla](resources/joomla-toolkit/joomla-architecture-rules.md).
+- [Структура расширений](resources/joomla-toolkit/joomla-extension-structures.md).
+- [REST API Joomla 6](resources/joomla-toolkit/joomla6-rest-api-core-full.md).
 
-- Manifest: `https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/joomla-toolkit.json`
-- Changelog: `https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/CHANGELOG.md`
+Первый самостоятельный выпуск переносит существующий пакет PF `1.0.0` в отдельный репозиторий. Два документа сохранены побайтно; в двух других заменены пять ссылок на локальные каталоги. Содержательная доработка Toolkit запланирована отдельным релизом. Исторические ссылки на development-flow сохранены в исходных материалах.
 
-Both URLs are included in `package.yaml` inside the ZIP. Each manifest version points to a tag-specific ZIP and includes its SHA-256. The `latest` URL advances with each stable GitHub release; prereleases must not replace the stable release. Installation remains an explicit operator action.
+## Подключение
 
-## Installation
+Скачайте из релиза установочный ZIP `joomla.toolkit.documentation-1.0.1.zip`, распакуйте его в выбранный каталог пакетов вашего workplace и зарегистрируйте `package.yaml` через его реестр корней и пакетов знаний. Автоматические архивы GitHub **Source code** содержат репозиторий целиком; для установки используйте ZIP из assets релиза.
 
-Unpack the package ZIP into a receiving workplace's chosen package directory and register its `package.yaml` through that workplace's package roots and knowledge-package registry. Keep the IDs above. The resource path is package-relative and needs no private documentation root. Run the native `knowledge-package-doctor` and refresh the package's resource index after registration.
+Сохраните ID пакета и ресурса. Корпус знаний находится внутри пакета, ссылки на него относительные. После регистрации выполните `knowledge-package-doctor` и обновите контекст проекта штатными средствами PF. Для поиска используется объявленная политика `index_policy: fulltext`.
 
-For an existing original 1.0.0 installation, the package has no update URL yet. Add the `update_sites` block from `updates/bootstrap-package-site.yaml` to its installed `package.yaml`, preserving its version, resources and other metadata. This one-time metadata registration lets PF discover the first external release. A global bootstrap-source entry alone does not create an installed-entity candidate in the verified PF version. After installation, the package's own `update_sites` keeps discovery working.
+## Обновления через GitHub Releases
+
+- [Стабильный манифест обновлений](https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/joomla-toolkit.json).
+- [История изменений](https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/CHANGELOG.md).
+
+Эти URL включены в `update_sites` внутри поставляемого `package.yaml`. Манифест содержит ссылки на ZIP конкретных версий и их SHA-256. Адрес `latest` переходит на следующий стабильный релиз; предварительные выпуски не должны заменять стабильный канал. Уже опубликованные assets не заменяются: изменённый пакет получает новую версию.
+
+У исходной установки `1.0.0` сервера обновлений ещё нет. Для первого обнаружения добавьте блок из [bootstrap-package-site.yaml](updates/bootstrap-package-site.yaml) в её установленный `package.yaml`, сохранив версию и остальные поля. Одной записи в глобальном bootstrap-реестре недостаточно для обнаружения кандидата установленной сущности в проверенной версии PF. В последующих установках нужный блок уже входит в ZIP.
 
 ```text
 python <pf-cli> update entity-sources rebuild --workplace <workplace>
@@ -30,9 +43,9 @@ python <pf-cli> update verify --workplace <workplace> --candidate <candidate-id>
 python <pf-cli> update apply --workplace <workplace> --candidate <candidate-id> --confirm
 ```
 
-The receiving workplace owns the install path. Back up existing installations before applying an update. GitHub Releases and SHA-256 protect artifact identity; release assets must never be replaced under an already published version.
+Каталог установки выбирает принимающий workplace. Перед применением обновления сохраните резервную копию установленного пакета.
 
-## Development and release
+## Сопровождение и выпуск
 
 ```text
 python -m pip install -r requirements.txt
@@ -41,8 +54,8 @@ python tools/release.py
 python tools/test_native_updater.py --pf-root <installed-pf-root>
 ```
 
-Run native updater tests against the installed PF Core before release; pass `--remote` after publishing to test the public release URLs. Test workplaces are isolated beneath `.pf/tmp/initial-release/`; shared source packages are not installed or replaced by these tests.
+Перед новым выпуском согласованно обновите `VERSION`, `package.yaml`, версию ресурса, индекс и `CHANGELOG.md`. Выполните проверки, соберите пакет, сделайте commit/push и тег точного коммита. В стабильный GitHub Release загрузите сгенерированные ZIP, `joomla-toolkit.json`, `SHA256SUMS` и `CHANGELOG.md`. После публикации выполните нативную проверку с `--remote`.
 
-For a new release: update `VERSION`, `package.yaml`, resource version/index and `CHANGELOG.md`; run checks, build the ZIP, commit and push, tag the exact commit, and upload the generated ZIP, `joomla-toolkit.json`, `SHA256SUMS` and `CHANGELOG.md` to a stable GitHub release. The build preserves older manifest versions and refuses to rewrite a published version with different bytes. Publish the next release under a new version.
+Сборка сохраняет предыдущие версии манифеста и запрещает менять архив под уже записанной версией. Нативные проверки выполняются в изолированных workplace внутри `.pf/tmp/initial-release/`; они не заменяют пакет в общем рабочем месте.
 
-The project is initialized locally with PF process `knowledge-package-update`, simple coordination and project-local knowledge-maintainer specialization. Private PF state and host configuration are excluded from Git and release assets. See [provenance and licensing](NOTICE.md).
+Проект подключён к PF: процесс `knowledge-package-update`, режим `simple`, локальная специализация сопровождения знаний. Приватное состояние PF и настройки компьютера исключены из Git и архива. [Происхождение и условия использования материалов](NOTICE.md), [изменения](CHANGELOG.md), [исходные контрольные суммы](docs/source-provenance.json).
