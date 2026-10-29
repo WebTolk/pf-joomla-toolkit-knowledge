@@ -1,4 +1,8 @@
-# Joomla 
+# Joomla architecture and project conventions
+
+## Scope and authority
+
+Use these references with the project's declared Joomla/PHP versions and accepted architecture. Joomla API facts, general engineering guidance and optional project profiles have different authority. A profile applies only when explicitly adopted by the project; loading this package does not adopt it. Record the reason and scope of accepted exceptions. An accepted architectural exception does not negate a demonstrated vulnerability. See the [review guide](joomla-extension-review.md) for evidence and finding categories.
 
 ## Coding Standards for Joomla projects
 
@@ -7,47 +11,57 @@
 - All component Classes namespaced under _vendor_\_name_ 
 - 
 - ### Code Standards
-- PHP 8.3+ language features (constructor promotion, readonly properties, enums, match expressions, typed class constants, `#[Override]` attribute)
+- Use language features supported by the declared minimum PHP version. PHP 8.3+ is an optional project baseline, not a requirement for every Joomla 5.4 extension. Constructor promotion, readonly properties and enums predate PHP 8.3; typed class constants and `#[Override]` require PHP 8.3.
 - Modern PSR-4 autoloading with Joomla namespaced classes
 - Joomla 5.x/6.x conventions and security practices
 - All files include `defined('_JEXEC') or die;` protection
 - Uses container-based dependency injection
 - PHPDoc comments for all public methods and properties
 ### Reference Libraries
-- Always consult https://context7.com/context7/developer_joomla-coding-standards library for additional coding standards reference
-- Refer to additional context7 libraries located in @.claude/includes/context7.json before starting any tasks
-- Always use the latest version of the context7 libraries
+Use the exact supported Joomla release and its installed Framework dependencies as the API reference. Development branches, rolling documentation and compatibility plugins do not establish behavior on an older target. Resolve project-selected knowledge before reading it; do not assume unrelated local configuration files or external reference collections are present.
 
 ### Input Handling
-- NEVER access PHP superglobals (`$_REQUEST`, `$_GET`, `$_POST`, `$_COOKIE`) directly. Always use Joomla's `InputInterface` via `$this->app->getInput()` or `Factory::getApplication()->getInput()`.
+- NEVER access PHP superglobals (`$_REQUEST`, `$_GET`, `$_POST`, `$_COOKIE`) directly. Use the application's input object via `$this->app->getInput()` or `Factory::getApplication()->getInput()`.
 - Use typed getter methods: `$input->getInt()`, `$input->getString()`, `$input->getCmd()`, etc.
-- For HikaShop legacy plugins, use `$this->app->getInput()` (available via the parent class) — NOT `hikaInput::get()` or raw superglobals.
+- Optional HikaShop project profile: for legacy plugins, use `$this->app->getInput()` (available via the parent class) — NOT `hikaInput::get()` or raw superglobals.
 - Filter and validate all input at the point of retrieval. Never trust client-supplied values for security-sensitive decisions (e.g., payment status).
 
 ### Design Patterns
-- Do NOT use the Repository design pattern in Joomla extensions. Use Joomla's native Model pattern (`ListModel`, `FormModel`, `AdminModel`, `BaseDatabaseModel`) for all data access.
-- Models handle database queries, state management, and business logic — there is no need for a separate Repository layer.
+
+Joomla Model/Table is a good default for request state, lists, forms, ordinary CRUD and record lifecycle. Keep existing authorization, validation, checkout, events, assets and cache behavior when changing persistence code.
+
+Use a domain service when an operation coordinates several steps or tables, external APIs, payments, files, retry policy or transaction boundaries. The service expresses the business operation; controllers adapt HTTP, models expose Joomla state/forms, and persistence collaborators perform storage work. A database transaction cannot roll back a remote payment or file operation: define idempotency, failure recovery and compensation explicitly.
+
+A Repository is permitted when it provides a concrete benefit, such as isolating complex queries, sharing persistence across entry points or supporting a domain boundary. A wrapper around every Table method adds little value. Its presence or absence is not itself a defect and does not require refactoring working code.
+
+Choose using the actual workflow, reuse, failure modes and project architecture. If a project explicitly prohibits a Repository or requires data access through models, preserve that restriction as an accepted project exception with its scope and rationale. It does not become a Joomla-wide rule and cannot waive a proven security defect.
+
+When overriding `AdminModel::save()`, preserve the lifecycle actually needed by the caller. In the inspected Joomla 5.4.8, 6.0.4 and 6.2.0 implementations, an existing row is loaded, then `bind()` runs before `prepareTable()`, `check()`, the before-save event and `store()`; the after-save event follows storage. Form filtering/validation in the controller/form model is a separate earlier boundary. Do not describe `prepareTable()` as running before bind or silently bypass events in a service.
+
+Source: [Joomla 5.4.8 AdminModel::save](https://github.com/joomla/joomla-cms/blob/5.4.8/libraries/src/MVC/Model/AdminModel.php#L1256), [Joomla 6.0.4 AdminModel::save](https://github.com/joomla/joomla-cms/blob/6.0.4/libraries/src/MVC/Model/AdminModel.php#L1288).
 
 ### Manifest XML Naming
-- Component manifest files MUST be named `{name}.xml` (e.g. `forum.xml`, `community.xml`), **NOT** `com_{name}.xml`.
-- The manifest lives inside the admin folder: `admin/com_{name}/{name}.xml`.
-- This matches Joomla's convention where the manifest filename is the extension name without the `com_` prefix.
+Use a manifest filename supported by the extension type and installer, and verify the archive and installed manifest location. A project may adopt `{name}.xml` and an `admin/` source directory as its packaging convention; that repository path is not a universal installed Joomla path. Renaming a working manifest requires checking the existing build/update contract first. See [installed payload verification](joomla-extension-structures.md#source-manifest-and-installed-payload).
 
 ### Configuration Parameters
 - The manifest XML is for extension metadata, installation instructions, namespace, and file declarations.
 - If extension type is `component` Extension configuration parameters MUST be defined in a separate `config.xml` file, NOT embedded as `<config>` blocks inside the extension's manifest XML file (`{name}.xml`).
 
 
-### Repository Folder Structure
+### Repository Folder Structure (optional project profile)
+
+The following layout is a project packaging convention. Joomla installation destinations are established by the manifest and extension adapter, not by the capitalization of repository folders.
 - Components are stored in `Components/com_{name}/` with `admin/`, `api/`, `media/`, and `site/` as peer subdirectories.
 - The `/api` folder is a subfolder of the component — NOT a top-level directory.
 - The `/src` folder belongs inside each component layer (e.g., `admin/src/`), NOT at the repository root.
 - The `/tmpl` folder is at the same level as `/src` within each layer — NOT a subdirectory of `/View`.
 - Plugins are stored in `Plugins/{group}/{name}/`.
 - Build configuration goes in the `Phing/` directory.
-- See `includes/joomla-devel-environment.md` for the full repository structure reference.
+- Use the project's own build configuration for the complete source layout; see the [extension structure reference](joomla-extension-structures.md) for installed destinations.
 
-### Version Synchronisation (V.R.M)
+### Version Synchronisation (V.R.M project profile)
+
+Apply the following three-file/Phing convention only to projects that adopt it. General release rule: released archives and executed migration files are immutable; use a new migration for an already deployed schema change. Extension releases can contain code or security fixes without SQL changes. Synchronize each release's actual version declarations even when no SQL update exists.
 - The extension version follows **V.R.M** (Version.Release.Modification) format (e.g. `0.0.5`)
 - **Reset rules when incrementing**:
   - Incrementing **V** (version) resets both **R** and **M** to `0` (e.g. `1.2.3` → `2.0.0`)
@@ -57,13 +71,13 @@
   1. **SQL update file**: `sql/updates/mysql/{V.R.M}.sql`
   2. **Manifest XML**: `<version>` element in `admin/com_{name}/{name}.xml`
   3. **Phing build file**: `version` property in `Phing/com_{name}.xml`
-- **When a schema change is needed**, ASK the user whether to:
+- **During an unreleased development iteration**, follow the project decision on whether to:
   - **Append** to the current (latest) SQL update file, OR
   - **Create a new** SQL update file with the next version number
-- Only when a **new** SQL update file is created should the manifest and Phing versions be bumped to match
+- Within that unreleased iteration, creating a **new** SQL update file also updates the manifest and Phing version to match
 - Appending to the current file requires no version changes — this supports iterative development before deployment
 
-### Git Commit Message Convention
+### Git Commit Message Convention (optional project profile)
 - Commit messages for extension changes MUST include the extension name and its current V.R.M version from the manifest XML
 - Format: `{extension_name} {V.R.M} - meaningful description`
 - Examples:
@@ -110,10 +124,10 @@
   </field>
   ```
 
-### Do Not Remove `$query->dump()`
-- `DatabaseQuery::dump()` is marked deprecated since Joomla 3 but **must not be removed** from existing code
-- It is actively used for debugging SQL statements during development
-- Agents and code reviewers must leave existing `dump()` calls in place
+### SQL Debugging (accepted project exception)
+A project may explicitly retain existing `$query->dump()` calls for controlled development diagnostics. This is a project exception, not a Joomla API guarantee or a requirement for new code. The inspected Framework DatabaseQuery class still provides the method with a deprecation marker.
+
+Preserve the accepted diagnostic behavior unless a change is authorized, but check whether SQL, bound values, credentials or personal data reach public output or logs. Demonstrated sensitive-data disclosure remains a security defect even if the debugging architecture was approved. Report its reachable path and propose the smallest containment, such as a verified development-only guard or redacted restricted logging.
 
 ### Database Schema
 - MySQL8+ and MariaDB 10+ support
@@ -246,12 +260,14 @@ KEY `idx_lft` (`lft`)
 - Place the `useScript` call in `display()` after `addToolbar()` and before `parent::display($tpl)`
 - Without this, the `form-validate` CSS class on the `<form>` element causes a JS error: `document.formvalidator is undefined`
 
-### Filter Form XML Preferences
+### Filter Form XML Preferences (optional project profile)
 - **Do NOT include a `fullordering` field** in filter XML files — users sort via clickable column headings (`HTMLHelper::_('searchtools.sort', ...)`)
 - The `<fields name="list">` section should only contain the `limit` (limitbox) field
 - Filter dropdowns go in `<fields name="filter">`
 
-### Model Error Surfacing
+### Model Error Surfacing (optional project profile)
+
+`DebugErrorAwareTrait` below is a project-defined trait, not a Joomla core API. Apply this policy only when that trait exists and the project has adopted it. Avoid exposing sensitive errors even in a diagnostic mode.
 - All ListModel and AdminModel subclasses MUST use the `DebugErrorAwareTrait`
 - The trait overrides `setError()` to enqueue errors as warnings when `JDEBUG` is active
 - The trait file exists in each component's `Model` namespace (same namespace, no import needed)
@@ -261,6 +277,10 @@ KEY `idx_lft` (`lft`)
 ## Joomla 5 Dependency Injection Patterns
 
 ### Component Service Provider (`services/provider.php`)
+
+For a component, `bootComponent()` loads the provider from the installed administrator component directory, including when the caller is the site or API application. Do not create site/API providers merely because those client directories exist. A custom service dependency on a model/controller needs actual MVC factory wiring; declaring it in a constructor alone does not make core MVCFactory resolve arbitrary arguments. Preserve parent constructor contracts for the exact target version.
+
+Sources: [Joomla 6.0.4 component boot](https://github.com/joomla/joomla-cms/blob/6.0.4/libraries/src/Extension/ExtensionManagerTrait.php#L42), [MVCFactory](https://github.com/joomla/joomla-cms/blob/6.0.4/libraries/src/MVC/Factory/MVCFactory.php#L99).
 
 ```php
 <?php
@@ -495,16 +515,16 @@ $service = $app->bootComponent('com_example')
 | Context | How to get services |
 |---------|-------------------|
 | **Admin controllers** (within the component) | `$this->app->bootComponent('com_example')->getContainer()->get(Service::class)` |
-| **API controllers** (within the component) | Same as admin — API controllers are in a separate namespace and don't have direct DI access |
+| **API controllers** (within the component) | Same custom bridge if adopted; constructor/factory injection is also possible when explicitly wired |
 | **Plugins** needing component services | `$this->getApplication()->bootComponent('com_example')->getContainer()->get(Service::class)` |
 | **CLI commands** | `$this->getApplication()->bootComponent('com_example')->getContainer()->get(Service::class)` |
 | **Other components** | `Factory::getApplication()->bootComponent('com_example')->getContainer()->get(Service::class)` |
 
 #### Important notes
 
-- This is an **internal convention**, not part of Joomla's public API — the same approach is used by Akeeba Backup and other major extensions
+- This is an **optional project convention**, not a method guaranteed by Joomla's component interface. Prefer explicit factory/constructor injection for dependencies within the component
 - `bootComponent()` triggers the component's `boot()` method if not already called, ensuring the container is populated
-- Services resolved this way are the same singleton instances registered in `services/provider.php`
+- Service lifetime depends on registration. Use a shared service explicitly when one instance is required; container registration alone does not imply singleton lifetime
 - The `@internal` docblock on `getContainer()` signals that this is a bridge method, not a public extension point
 - **Never call `getContainer()` from within the component's own models or views** — those should use constructor injection via the service provider
 
@@ -564,10 +584,10 @@ class ExampleComponent extends MVCComponent implements BootableExtensionInterfac
 1. **Prefer constructor injection** over service locator pattern
 2. **Use interfaces** for type hints, not concrete classes
 3. **Register services as shared** (singleton) when appropriate
-4. **Use PHP 8.3+ constructor promotion** with `readonly` properties
+4. **Use constructor promotion and `readonly`** only when supported by the declared minimum PHP version
 5. **Avoid circular dependencies** - use lazy loading or factory patterns
 6. **Keep service providers simple** - complex logic belongs in the services themselves
-7. **Use `#[Override]`** attribute when overriding parent methods
+7. **Use `#[Override]`** when the minimum PHP version supports it
 
 ## Deprecated Pattern Avoidance:
    ```php
@@ -631,70 +651,30 @@ Factory::getApplication()->getIdentity()->id;
 - Makes debugging easier by showing explicit method calls
 - Aligns with modern PHP best practices
 
-### `jexit()` (Deprecated since 4.0)
-**Pattern**: Using `jexit()` for token validation exit
-**Removal Version**: 6.0
+### Token-check Control Flow
+Prefer the Joomla controller token-check facility in state-changing web controller actions. In the inspected BaseController versions, `checkToken()` returns a boolean; invalid tokens redirect by default. It does not always throw for a failed token. If redirects are disabled, explicitly stop when the result is false:
 
-#### Detection Pattern
 ```php
-// WRONG — jexit() is deprecated
-Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
+if (!$this->checkToken('post', false)) {
+    throw new \RuntimeException(Text::_('JINVALID_TOKEN'), 403);
+}
 ```
 
-#### Recommended Migration
-```php
-// CORRECT — use BaseController's built-in method
-$this->checkToken();
-```
+This assumes a Joomla web MVC controller and the appropriate `Text` import. A token check does not replace authorization or record ownership checks. Preserve the request method expected by the endpoint. For API authentication and endpoint-specific authorization, use the [REST API reference](joomla6-rest-api-core-full.md).
 
-`BaseController::checkToken()` handles token validation and throws the appropriate exception. No manual `Session::checkToken()` or `jexit()` calls needed.
+Source: [Joomla 6.0.4 BaseController::checkToken](https://github.com/joomla/joomla-cms/blob/6.0.4/libraries/src/MVC/Controller/BaseController.php#L1128).
 
 ### `$this->app` in MVC Controllers
 **Note**: `$this->app` is a protected property on `BaseController` that is always initialized in the constructor (with `Factory::getApplication()` fallback). It is safe to use `$this->app` directly in MVC controllers. `getApplication()` does NOT exist on MVC controller classes — do not use it there.
 
-### Bootstrap Modals (Deprecated in Joomla 5)
-**Pattern**: Using Bootstrap modals (`data-bs-toggle="modal"`, `bootstrap.modal` script, `new bootstrap.Modal()`)
-**Issue**: Joomla 5 provides its own `<joomla-dialog>` web component. Bootstrap modals are deprecated and will be removed in Joomla 6.
+### Modal Assets and Dialog Choice
+Bootstrap modals are present in the inspected Joomla 5.4.8, 6.0.4 and 6.2.0 releases: the Bootstrap helper has `modal()` and the vendor asset registry declares `bootstrap.modal`. Do not report a removal in Joomla 6 merely because a project prefers Joomla dialog.
 
-#### Detection Patterns
-```javascript
-// WRONG — bootstrap is not a global in Joomla 5
-new bootstrap.Modal(element).show();
-```
-```html
-<!-- WRONG — Bootstrap modal markup -->
-<div class="modal fade" id="myModal" data-bs-toggle="modal">
-```
-```php
-// WRONG — Bootstrap modal asset loading
-HTMLHelper::_('bootstrap.modal', '#myModalId');
-$wa->useScript('bootstrap.modal');
-```
+Load the asset required by the selected UI and verify its actual JavaScript API and template behavior. Joomla dialog can be a project choice; changing an existing modal requires compatibility, focus/keyboard and accessibility checks.
 
-#### Recommended Migration
-Use Joomla's `<joomla-dialog>` web component with `data-joomla-dialog` attribute:
-```php
-// Load the dialog autocreate script
-$wa->useScript('joomla.dialog-autocreate');
-```
-```html
-<!-- Trigger button -->
-<button type="button"
-        data-joomla-dialog='{"popupType": "inline", "src": "#myDialogContent", "textHeader": "Title", "width": "500px", "height": "fit-content"}'>
-    Open Dialog
-</button>
+Sources: [Joomla 6.0.4 Bootstrap helper](https://github.com/joomla/joomla-cms/blob/6.0.4/libraries/src/HTML/Helpers/Bootstrap.php#L298), [Joomla 6.0.4 release payload](https://github.com/joomla/joomla-cms/releases/tag/6.0.4).
 
-<!-- Dialog content in a template element -->
-<template id="myDialogContent">
-    <div class="p-3">Dialog body here</div>
-</template>
-```
-
-Reference: https://manual.joomla.org/docs/4.4/general-concepts/javascript/js-library/joomla-dialog/
-
-### `$query->dump()` — Do NOT Remove
-**Pattern**: `$query->dump()` marked deprecated since Joomla 3
-**Status**: Despite the deprecation marker, this method **must not be removed** from existing code. It is actively used for debugging SQL statements during development. Agents and code reviewers must leave existing `dump()` calls in place.
+For SQL debugging policy, see [SQL Debugging](#sql-debugging-accepted-project-exception). For other version-dependent API claims, use the [review version checks](joomla-extension-review.md#version-specific-api-checks).
 
 ## Joomla 5 Events System Reference
 

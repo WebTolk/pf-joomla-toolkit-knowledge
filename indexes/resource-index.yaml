@@ -1,9 +1,9 @@
 schema_version: 1
 package:
   id: joomla.toolkit.documentation
-  version: 1.0.1
+  version: 1.1.0
   package_root: global
-generated_at: '2026-10-29T12:37:28Z'
+generated_at: '2026-10-29T13:25:00Z'
 load_policy:
   default: on_demand
   heavy_resources: index_only_until_requested
@@ -13,7 +13,7 @@ resources:
     id: joomla-toolkit
     kind: reference
     title: Joomla toolkit
-    description: Joomla architecture rules, extension patterns, lifecycle, packaging, ACL, and migration references.
+    description: Joomla architecture, extension review, routing/menu context, security boundaries, installed payload and version-specific API references.
     path_ref:
       package: joomla.toolkit.documentation
       relative_path: resources
@@ -41,5 +41,5 @@ resources:
     license:
       status: not_declared
       note: The original package declares no license. This extraction does not assign a new license; existing third-party terms remain applicable.
-    version: 1.0.1
+    version: 1.1.0
     package: joomla.toolkit.documentation

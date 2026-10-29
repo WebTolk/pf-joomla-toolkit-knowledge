@@ -300,7 +300,7 @@ class ExampleHelper
 - `/config.xml` - Configuration parameters (NOT in the manifest XML)
 - `/access.xml` - ACL action definitions
 - `/services/provider.php` - Service provider for dependency injection
-- `/src/Extension/extension_nameComponent.php` - Main extension class (must expose `getContainer()` for service resolution — see `joomla5-di-patterns.md`)
+- `/src/Extension/extension_nameComponent.php` - Main extension class. A custom `getContainer()` bridge is an optional project convention, not a required Joomla component method; see [DI patterns](joomla-architecture-rules.md#joomla-5-dependency-injection-patterns).
 - `/language` - Language files are installed within the component.
 - `/tmpl` - Template files are at the same level as `/src` — **NOT** a subdirectory of `/View`.
 
@@ -648,3 +648,50 @@ protected array $fieldsToRenderItem = ['id', 'title', 'state'];
 ### Component Key Files
 - `/language` - Language files are installed within the component.
 
+
+
+## Source, manifest and installed payload
+
+Directory trees above illustrate extension layouts; the repository's source folders and the installed destinations need not be identical. For a release, trace every required runtime file from source through manifest/build rules into the archive and its intended installed location. A version string or a source-only class cannot establish archive completeness.
+
+### Component namespace and boot mapping
+
+For a namespaced component using `<namespace path="src">Vendor\Component\Example</namespace>`, the normal installed client mappings are:
+
+| Namespace suffix | Installed source root |
+| --- | --- |
+| `Administrator` | `administrator/components/com_example/src/` |
+| `Site` | `components/com_example/src/` |
+| `Api` | `api/components/com_example/src/` |
+
+The API namespace does not map to `admin/src/Api/`. Manifest/build rules must deliver API classes to the API application tree. Namespace mapping depends on the declared namespace path and the corresponding directories being present. A source folder named `admin/` or `api/` is a packaging choice, not an autoload rule by itself.
+
+`bootComponent()` loads the component provider from `administrator/components/com_example/services/provider.php`. The site/API client does not automatically load an independent provider from its own component directory. Modules and plugins have their own extension boot paths; check the extension type rather than copying component rules to every type.
+
+Sources: [Joomla 5.4.8 namespace map](https://github.com/joomla/joomla-cms/blob/5.4.8/libraries/namespacemap.php#L198), [Joomla 6.0.4 namespace map](https://github.com/joomla/joomla-cms/blob/6.0.4/libraries/namespacemap.php#L198), [Joomla 6.0.4 component boot](https://github.com/joomla/joomla-cms/blob/6.0.4/libraries/src/Extension/ExtensionManagerTrait.php#L42).
+
+### Payload checklist
+
+| Area | Correspondence to verify |
+| --- | --- |
+| Identity and clients | Extension type, element/plugin group, version, namespace, minimum runtime and site/administrator/API destinations agree with the intended release. |
+| `services` and `src` | Provider, extension/dispatcher classes and MVC factories exist in the ZIP and resolve the declared namespaces, including filename/class case on a case-sensitive host. Custom factory dependencies are actually wired. |
+| `tmpl`, `forms`, `layouts` | Templates, form XML and reusable layouts are shipped to the paths used by the caller. Check layout overrides and included helper files; source presence alone does not make them installable. |
+| Media and assets | Manifest media mapping delivers scripts/styles and `joomla.asset.json` to the expected media destination. Asset names, URIs, dependencies and versions match use in PHP/templates; inspect missing assets, duplicate loads and client selection. |
+| Languages | Required `.ini`/`.sys.ini` files, language tags, client paths and translation keys match runtime and installer use. Review missing keys without assuming every language file shares one loading path. |
+| SQL | Fresh-install SQL and versioned updates agree with the manifest's schema/update paths and supported database drivers. Review upgrades from earlier supported versions, prefixes, data preservation and failure behavior. Do not rewrite an already executed migration. |
+| Installer scripts | A declared script file and its required classes are in the archive. Match return/interface/provider form and preflight/install/update/postflight/uninstall behavior to the actual target installer API. |
+| Build and exclusions | Archive root and manifest references work after packaging. Include runtime dependencies; exclude credentials, local settings, diagnostics, temporary files, reports and development-only tooling. |
+
+Compare archive entries and bytes with the intended source revision; validate relative paths and reject traversal or unintended nesting. XML parsing and an archive allowlist are useful checks but do not simulate an installation.
+
+### Evidence levels
+
+| Evidence | What it establishes |
+| --- | --- |
+| Source inspection | A file/class/configuration exists in the examined revision. |
+| Archive inspection | The downloadable artifact contains the expected files/bytes and manifest references. |
+| Successful installation or upgrade | The tested target accepted that artifact and completed the observed installer path. Record the target version and relevant starting state. |
+| Installed behavior | The installed extension performed the tested operation with the observed permissions, routes, assets and settings. |
+
+Do not promote one level to the next without evidence. A documentation or package-composition review can end at archive inspection when installation is outside scope; state the remaining acceptance boundary explicitly.

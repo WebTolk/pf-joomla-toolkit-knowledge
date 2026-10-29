@@ -9,6 +9,7 @@
 - [Обзор Toolkit](resources/overview.md).
 - [Архитектурные правила](resources/joomla-architecture-rules.md).
 - [Структура расширений](resources/joomla-extension-structures.md).
+- [Ревью расширений](resources/joomla-extension-review.md): доказательства, безопасность, маршрутизация и меню, проверка API по версиям.
 - [REST API Joomla 6](resources/joomla6-rest-api-core-full.md).
 
 ## Подключение и обновления

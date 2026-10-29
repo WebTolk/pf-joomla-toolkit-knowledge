@@ -9,6 +9,7 @@ A connectable, updatable knowledge package for [Process Forge](https://github.co
 - [Toolkit overview](resources/overview.md).
 - [Architecture rules](resources/joomla-architecture-rules.md).
 - [Extension structures](resources/joomla-extension-structures.md).
+- [Extension review](resources/joomla-extension-review.md): evidence, security, routing/menu context and version-specific API checks.
 - [Joomla 6 REST API](resources/joomla6-rest-api-core-full.md).
 
 ## Installation and updates
