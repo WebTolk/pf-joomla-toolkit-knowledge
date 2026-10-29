@@ -1,0 +1,32 @@
+{
+  "package_id": "joomla.toolkit.documentation",
+  "source_package_version": "1.0.0",
+  "source_package_sha256": "43bd7663bec330cef9e5915b2955f8987e490b793bab03e82792f765fe4846bf",
+  "extracted_at": "2026-10-29",
+  "files": [
+    {
+      "path": "joomla-architecture-rules.md",
+      "source_sha256": "da9d83333eec339e0b3f1deaa9de1912a6867448262275254a780ac1d9bd374a",
+      "published_sha256": "da9d83333eec339e0b3f1deaa9de1912a6867448262275254a780ac1d9bd374a",
+      "private_reference_replacements": 0
+    },
+    {
+      "path": "joomla-extension-structures.md",
+      "source_sha256": "a81905b1d3ab8170114899a9fba157fb2a260e64b4510b2e02598786c027767c",
+      "published_sha256": "a1455adfc565ac27db38d0075c6075c84be353e9262cc23bf558e995462e170d",
+      "private_reference_replacements": 4
+    },
+    {
+      "path": "joomla6-rest-api-core-full.md",
+      "source_sha256": "8623e05081ae0752fe0c7acf83df016a46553aeff68386a9eef98a928278e1fc",
+      "published_sha256": "d830f73bc0b2664154897ddb3b1cefb7826407487337b17da400608bcdc0ebd8",
+      "private_reference_replacements": 1
+    },
+    {
+      "path": "README.md",
+      "source_sha256": "2d1568aac68dd55d4dbb5385038f53249589f2496129bb37e5adbeaeca634060",
+      "published_sha256": "2d1568aac68dd55d4dbb5385038f53249589f2496129bb37e5adbeaeca634060",
+      "private_reference_replacements": 0
+    }
+  ]
+}

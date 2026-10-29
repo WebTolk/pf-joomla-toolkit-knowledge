@@ -1,0 +1,21 @@
+update_sites:
+- id: webtolk-joomla-toolkit
+  enabled: true
+  manifest_url: https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/joomla-toolkit.json
+  changelog_url: https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/CHANGELOG.md
+  channel: stable
+  priority: 10
+  trust:
+    require_https: true
+    require_sha256: true
+    allow_unsigned: true
+    signature_required: false
+  policy:
+    check_interval_hours: 24
+    auto_check: true
+    auto_stage: false
+    auto_apply: false
+    notify_operator: true
+    allow_stage: true
+    allow_apply: true
+    backup_before_apply: true

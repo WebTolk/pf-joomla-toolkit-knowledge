@@ -1,0 +1,67 @@
+schema_version: 1
+id: joomla.toolkit.documentation
+name: Joomla Toolkit
+version: 1.0.1
+kind: documentation
+scope: workplace
+package_root: global
+description: Compact Joomla engineering rules, extension structure references, lifecycle,
+  packaging, ACL, migration, and REST API notes.
+resources:
+- id: joomla-toolkit
+  kind: reference
+  title: Joomla toolkit
+  description: Правила, паттерны расширений, lifecycle, packaging, ACL и migration
+    references для Joomla.
+  path_ref:
+    package: joomla.toolkit.documentation
+    relative_path: resources/joomla-toolkit
+  path_status: available
+  load_policy: on_demand
+  index_policy: fulltext
+  source:
+    kind: local_snapshot
+    description: Extracted from the existing ProcessForge workplace Joomla Toolkit
+      resource. Original file digests are in docs/source-provenance.json.
+  update_policy:
+    mode: package_release
+    description: Updated together with the versioned package through GitHub Releases.
+  versioning:
+    mode: multi_version
+    version_field: version
+    instance_id_template: '{id}@{version}'
+  retention:
+    policy: keep_versions
+    keep_last_n: null
+  snapshot_behavior:
+    on_new_version: notify_only
+    on_current_generation_changed: notify_only
+    on_instance_missing: broken
+    reproducibility: exact
+  license:
+    status: not_declared
+    note: The original package declares no license. This extraction does not assign
+      a new license; existing third-party terms remain applicable.
+  version: 1.0.1
+type: knowledge_package
+update_sites:
+- id: webtolk-joomla-toolkit
+  enabled: true
+  manifest_url: https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/joomla-toolkit.json
+  changelog_url: https://github.com/WebTolk/pf-joomla-toolkit-knowledge/releases/latest/download/CHANGELOG.md
+  channel: stable
+  priority: 10
+  trust:
+    require_https: true
+    require_sha256: true
+    allow_unsigned: true
+    signature_required: false
+  policy:
+    check_interval_hours: 24
+    auto_check: true
+    auto_stage: false
+    auto_apply: false
+    notify_operator: true
+    allow_stage: true
+    allow_apply: true
+    backup_before_apply: true

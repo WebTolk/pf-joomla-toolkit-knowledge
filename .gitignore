@@ -1,0 +1,7 @@
+.pf/
+.codex/
+.secrets/
+__pycache__/
+*.pyc
+*.tmp
+*.bak

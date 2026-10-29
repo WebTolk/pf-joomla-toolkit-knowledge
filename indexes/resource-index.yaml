@@ -1,0 +1,47 @@
+schema_version: 1
+package:
+  id: joomla.toolkit.documentation
+  version: 1.0.1
+  package_root: global
+generated_at: '2026-10-29T00:00:00Z'
+load_policy:
+  default: on_demand
+  heavy_resources: index_only_until_requested
+  do_not_load_full_content: true
+resources:
+- id: joomla-toolkit
+  kind: reference
+  title: Joomla toolkit
+  description: Правила, паттерны расширений, lifecycle, packaging, ACL и migration
+    references для Joomla.
+  path_ref:
+    package: joomla.toolkit.documentation
+    relative_path: resources/joomla-toolkit
+  path_status: available
+  load_policy: on_demand
+  index_policy: fulltext
+  source:
+    kind: local_snapshot
+    description: Extracted from the existing ProcessForge workplace Joomla Toolkit
+      resource. Original file digests are in docs/source-provenance.json.
+  update_policy:
+    mode: package_release
+    description: Updated together with the versioned package through GitHub Releases.
+  versioning:
+    mode: multi_version
+    version_field: version
+    instance_id_template: '{id}@{version}'
+  retention:
+    policy: keep_versions
+    keep_last_n: null
+  snapshot_behavior:
+    on_new_version: notify_only
+    on_current_generation_changed: notify_only
+    on_instance_missing: broken
+    reproducibility: exact
+  license:
+    status: not_declared
+    note: The original package declares no license. This extraction does not assign
+      a new license; existing third-party terms remain applicable.
+  version: 1.0.1
+  package: joomla.toolkit.documentation
