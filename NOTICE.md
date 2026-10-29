@@ -1,7 +1,5 @@
-# Provenance and licensing
+# Происхождение и условия использования
 
-Joomla Toolkit is maintained by WebTolk. This package was extracted at the repository owner's request from the existing ProcessForge workplace package `joomla.toolkit.documentation` version 1.0.0. It is a separate knowledge package, not a copy of ProcessForge Core.
+Joomla Toolkit сопровождается WebTolk. Пакет перенесён из существующего пакета знаний ProcessForge `joomla.toolkit.documentation` версии `1.0.0`. Два исходных документа сохранены побайтно; в двух других заменены пять ссылок на локальные каталоги. Содержимое статей при упрощении репозитория не менялось.
 
-The original manifest is preserved in `docs/upstream-package-1.0.0.yaml`. `docs/source-provenance.json` records the original and published SHA-256 of every document. Two documents are copied byte for byte; two have only five private path references replaced by portable knowledge references. The shared source documents are preserved in place.
-
-The original package declares no license. This extraction does not assign a new license or replace any existing third-party terms. Public repository availability alone does not grant a separate redistribution license. References and code examples retain their original provenance.
+Исходный пакет не содержит отдельной лицензии. Эта публикация не назначает новую лицензию и не заменяет действующие условия сторонних материалов и примеров.

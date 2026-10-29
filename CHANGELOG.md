@@ -2,11 +2,11 @@
 
 ## 1.0.1 - 2026-10-29
 
-- Extract the existing Joomla Toolkit as the public WebTolk ProcessForge knowledge package.
+- Publish Joomla Toolkit as an independent knowledge package using the standard ProcessForge package structure.
 - Preserve package ID `joomla.toolkit.documentation`, resource ID `joomla-toolkit` and all four source documents.
-- Bundle the resource inside the package; replace five private Windows path references with portable PF knowledge references.
-- Add GitHub Releases update discovery, SHA-256 verification, release tooling and native-updater acceptance checks.
-- Preserve the original 1.0.0 package manifest and source digests for traceability. Substantive Joomla content revisions are deferred.
+- Store the articles directly in `resources/`; replace five original private path references with portable references.
+- Derive the package manifest from native `knowledge-package-create` and generate the resource index with native PF tooling.
+- Include GitHub Releases update discovery and SHA-256 verification metadata. Maintenance tooling and private PF state are kept outside the published package.
 
 ## 1.0.0 - Existing workplace baseline
 

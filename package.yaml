@@ -1,12 +1,15 @@
 schema_version: 1
 id: joomla.toolkit.documentation
 name: Joomla Toolkit
-version: 1.0.1
+title: Joomla Toolkit
 kind: documentation
 scope: workplace
-package_root: global
+version: 1.0.1
+status: active
 description: Compact Joomla engineering rules, extension structure references, lifecycle,
   packaging, ACL, migration, and REST API notes.
+visibility: public
+load_policy: on_demand
 resources:
 - id: joomla-toolkit
   kind: reference
@@ -15,14 +18,14 @@ resources:
     references для Joomla.
   path_ref:
     package: joomla.toolkit.documentation
-    relative_path: resources/joomla-toolkit
+    relative_path: resources
   path_status: available
   load_policy: on_demand
   index_policy: fulltext
   source:
     kind: local_snapshot
-    description: Extracted from the existing ProcessForge workplace Joomla Toolkit
-      resource. Original file digests are in docs/source-provenance.json.
+    description: Snapshot of the pre-existing Joomla Toolkit knowledge resource, extracted
+      from ProcessForge workplace package 1.0.0 and maintained by WebTolk.
   update_policy:
     mode: package_release
     description: Updated together with the versioned package through GitHub Releases.
@@ -43,6 +46,13 @@ resources:
     note: The original package declares no license. This extraction does not assign
       a new license; existing third-party terms remain applicable.
   version: 1.0.1
+indexes:
+  resource_index: indexes/resource-index.yaml
+tags:
+- documentation
+- knowledge
+- joomla
+package_root: global
 type: knowledge_package
 update_sites:
 - id: webtolk-joomla-toolkit
